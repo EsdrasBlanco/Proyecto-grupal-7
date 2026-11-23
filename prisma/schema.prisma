@@ -1,0 +1,103 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  ESTUDIANTE
+  DOCENTE
+  DIRECTOR
+}
+
+enum EstadoMatricula {
+  INSCRITO
+  APROBADO
+  REPROBADO
+  RETIRADO
+}
+
+model User {
+  id         Int      @id @default(autoincrement())
+  nombres    String   @db.VarChar(100)
+  apellidos  String   @db.VarChar(100)
+  ecorreo    String   @unique @db.VarChar(100)
+  password   String   @db.VarChar(255)
+  telefono   String?  @db.VarChar(20)
+  rol        Role     @default(ESTUDIANTE)
+  activo     Boolean  @default(true)
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  estudiante Estudiante?
+  docente    Docente?
+
+  @@map("users")
+}
+
+model Estudiante {
+  id                 Int         @id @default(autoincrement())
+  documentoIdentidad String      @unique @map("documento_identidad") @db.VarChar(20)
+  fechaNacimiento    DateTime?   @map("fecha_nacimiento") @db.Date
+  userId             Int         @unique @map("user_id")
+
+  user       User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  matriculas Matricula[]
+
+  @@map("estudiantes")
+}
+
+model Docente {
+  id           Int     @id @default(autoincrement())
+  especialidad String  @db.VarChar(100)
+  userId       Int     @unique @map("user_id")
+
+  user   User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  cursos Curso[]
+
+  @@map("docentes")
+}
+
+model Aula {
+  id         Int     @id @default(autoincrement())
+  nombreAula String  @unique @map("nombre_aula") @db.VarChar(50)
+  capacidad  Int
+  ubicacion  String? @db.VarChar(100)
+
+  cursos Curso[]
+
+  @@map("aulas")
+}
+
+model Curso {
+  id            Int     @id @default(autoincrement())
+  nombreCurso   String  @map("nombre_curso") @db.VarChar(120)
+  descripcion   String? @db.Text
+  duracionHoras Int     @map("duracion_horas")
+  horario       String  @db.VarChar(100)
+  docenteId     Int     @map("docente_id")
+  aulaId        Int     @map("aula_id")
+
+  docente    Docente     @relation(fields: [docenteId], references: [id])
+  aula       Aula        @relation(fields: [aulaId], references: [id])
+  matriculas Matricula[]
+
+  @@map("cursos")
+}
+
+model Matricula {
+  id                Int             @id @default(autoincrement())
+  estudianteId      Int             @map("estudiante_id")
+  cursoId           Int             @map("curso_id")
+  fechaInscripcion  DateTime        @default(now()) @map("fecha_inscripcion")
+  calificacionFinal Decimal?        @map("calificacion_final") @db.Decimal(5, 2)
+  estado            EstadoMatricula @default(INSCRITO)
+
+  estudiante Estudiante @relation(fields: [estudianteId], references: [id])
+  curso      Curso      @relation(fields: [cursoId], references: [id])
+
+  @@unique([estudianteId, cursoId])
+  @@map("matriculas")
+}
