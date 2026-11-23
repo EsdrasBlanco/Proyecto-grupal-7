@@ -7,3 +7,5 @@ generated
 .env.development
 .env.test
 .agents
+
+_legacy_express

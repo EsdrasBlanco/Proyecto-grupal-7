@@ -1,42 +1,41 @@
 {
-  "name": "proyecto-6ta-semana",
+  "name": "proyecto-grupal-7",
   "version": "1.0.0",
-  "description": "API Academia - Gestión de Estudiantes, Docentes, Cursos y Matrículas",
-  "main": "index.ts",
-  "scripts": {
-    "dev": "tsx watch index.ts",
-    "start": "tsx index.ts",
-    "prisma:generate": "prisma generate",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [],
+  "description": "API Academia - Migración a NestJS",
   "author": "",
-  "license": "ISC",
-  "devDependencies": {
-    "@types/bcryptjs": "^3.0.0",
-    "@types/cors": "^2.8.19",
-    "@types/dotenv": "^8.2.3",
-    "@types/express": "^5.0.6",
-    "@types/jsonwebtoken": "^9.0.10",
-    "@types/node": "^26.6.6",
-    "@types/pg": "^8.23.1",
-    "@types/react": "^19.3.0",
-    "@types/swagger-ui-express": "^4.1.8",
-    "bcryptjs": "^3.0.3",
-    "cors": "^2.8.6",
-    "dotenv": "^18.0.10",
-    "express": "^5.3.0",
-    "prisma": "7.0.0",
-    "react": "^19.3.1",
-    "tsx": "^4.23.15",
-    "typescript": "^5.8.3",
-    "zod": "^4.6.7"
+  "private": true,
+  "license": "UNLICENSED",
+  "type": "module",
+  "scripts": {
+    "build": "nest build",
+    "format": "prettier --write \"src/**/*.ts\"",
+    "start": "nest start",
+    "start:dev": "nest start --watch",
+    "start:debug": "nest start --debug --watch",
+    "start:prod": "node dist/main",
+    "prisma:generate": "prisma generate"
   },
   "dependencies": {
+    "@nestjs/common": "^12.0.1",
+    "@nestjs/core": "^12.0.1",
+    "@nestjs/mapped-types": "^12.0.0",
+    "@nestjs/platform-express": "^12.0.1",
     "@prisma/adapter-pg": "7.0.0",
     "@prisma/client": "7.0.0",
-    "jsonwebtoken": "^9.0.3",
+    "dotenv": "^18.0.10",
     "pg": "^8.23.1",
-    "swagger-ui-express": "^5.0.1"
+    "reflect-metadata": "^0.2.2",
+    "rxjs": "^7.8.1"
+  },
+  "devDependencies": {
+    "@nestjs/cli": "^12.0.0",
+    "@nestjs/schematics": "^12.0.0",
+    "@types/express": "^5.0.0",
+    "@types/node": "^24.0.0",
+    "@types/pg": "^8.23.1",
+    "prettier": "^3.4.2",
+    "prisma": "7.0.0",
+    "source-map-support": "^0.5.21",
+    "typescript": "^5.8.3"
   }
 }
