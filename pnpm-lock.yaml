@@ -26,6 +26,9 @@ importers:
       '@prisma/client':
         specifier: 7.0.0
         version: 7.0.0(prisma@7.0.0(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(typescript@5.9.3))(typescript@5.9.3)
+      '@prisma/client-runtime-utils':
+        specifier: ^7.10.1
+        version: 7.10.1
       dotenv:
         specifier: ^18.0.10
         version: 18.0.10
@@ -381,6 +384,9 @@ packages:
 
   '@prisma/client-runtime-utils@7.0.0':
     resolution: {integrity: sha512-PAiFgMBPrLSaakBwUpML5NevipuKSL3rtNr8pZ8CZ3OBXo0BFcdeGcBIKw/CxJP6H4GNa4+l5bzJPrk8Iq6tDw==}
+
+  '@prisma/client-runtime-utils@7.10.1':
+    resolution: {integrity: sha512-AzoATVIgmO3lcZfM443+9SI7+cyLMW2+Psw4op8WQHpHvHCX//CKxv8fwhiL0yGWF8DjdQrFewxrZo5McBdB8g==}
 
   '@prisma/client@7.0.0':
     resolution: {integrity: sha512-FM1NtJezl0zH3CybLxcbJwShJt7xFGSRg+1tGhy3sCB8goUDnxnBR+RC/P35EAW8gjkzx7kgz7bvb0MerY2VSw==}
@@ -1715,6 +1721,8 @@ snapshots:
       - pg-native
 
   '@prisma/client-runtime-utils@7.0.0': {}
+
+  '@prisma/client-runtime-utils@7.10.1': {}
 
   '@prisma/client@7.0.0(prisma@7.0.0(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(typescript@5.9.3))(typescript@5.9.3)':
     dependencies:
