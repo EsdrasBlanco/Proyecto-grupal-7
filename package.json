@@ -44,6 +44,7 @@
     "prettier": "^3.4.2",
     "prisma": "7.0.0",
     "source-map-support": "^0.5.21",
+    "tsx": "^4.23.15",
     "typescript": "^5.8.3"
   }
 }
