@@ -1,3 +1,4 @@
+
 import {
   Injectable,
   ConflictException,
@@ -84,6 +85,13 @@ export class UserService {
     }
 
     return user;
+  }
+
+  // Buscar usuario por correo para autenticación
+  async findByEmailForAuth(ecorreo: string) {
+    return this.prisma.user.findUnique({
+      where: { ecorreo },
+    });
   }
 
   // Actualizar usuario
