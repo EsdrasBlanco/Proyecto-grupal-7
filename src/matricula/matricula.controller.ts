@@ -1,7 +1,9 @@
 // src/matriculas/matriculas.controller.ts
 
-import {  Body, Controller, Delete, Get, Param, Query, ParseIntPipe, Post, Put  } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Query, ParseIntPipe, Post, Put } from '@nestjs/common';
 import { MatriculaService } from './matricula.service.js';
+import { CreateMatriculaDto } from './dto/create-matricula.dto.js';
+import { UpdateMatriculaDto } from './dto/update-matricula.dto.js';
 
 @Controller('matricula')
 export class MatriculaController {
@@ -29,19 +31,18 @@ export class MatriculaController {
     return this.matriculaService.getReporteAulas();
   }
 
-
   @Get(':id')
   findOne(@Param('id', ParseIntPipe) id: number) {
     return this.matriculaService.findOne(id);
   }
 
   @Post()
-  create(@Body() body: any) {
+  create(@Body() body: CreateMatriculaDto) {
     return this.matriculaService.create(body);
   }
 
   @Put(':id')
-  update(@Param('id', ParseIntPipe) id: number, @Body() body: any) {
+  update(@Param('id', ParseIntPipe) id: number, @Body() body: UpdateMatriculaDto) {
     return this.matriculaService.update(id, body);
   }
 
@@ -50,4 +51,3 @@ export class MatriculaController {
     return this.matriculaService.remove(id);
   }
 }
-
