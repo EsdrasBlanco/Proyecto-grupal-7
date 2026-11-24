@@ -2,23 +2,17 @@ import {
   Controller,
   Get,
   Post,
-  Body,
-  Patch,
-  Param,
+  Put,
   Delete,
+  Param,
+  Body,
+  NotFoundException,
 } from '@nestjs/common';
 import { CursoService } from './curso.service.js';
-import { CreateCursoDto } from './dto/create-curso.dto.js';
-import { UpdateCursoDto } from './dto/update-curso.dto.js';
 
 @Controller('curso')
 export class CursoController {
   constructor(private readonly cursoService: CursoService) {}
-
-  @Post()
-  create(@Body() createCursoDto: CreateCursoDto) {
-    return this.cursoService.create(createCursoDto);
-  }
 
   @Get()
   findAll() {
@@ -26,17 +20,34 @@ export class CursoController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.cursoService.findOne(+id);
+  async findOne(@Param('id') id: string) {
+    const curso = await this.cursoService.findOne(+id);
+    if (!curso) {
+      throw new NotFoundException(`El curso con id ${id} no existe`);
+    }
+    return curso;
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCursoDto: UpdateCursoDto) {
-    return this.cursoService.update(+id, updateCursoDto);
+  @Post()
+  create(@Body() body: any) {
+    return this.cursoService.create(body);
+  }
+
+  @Put(':id')
+  async update(@Param('id') id: string, @Body() body: any) {
+    const curso = await this.cursoService.findOne(+id);
+    if (!curso) {
+      throw new NotFoundException(`El curso con id ${id} no existe`);
+    }
+    return this.cursoService.update(+id, body);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  async remove(@Param('id') id: string) {
+    const curso = await this.cursoService.findOne(+id);
+    if (!curso) {
+      throw new NotFoundException(`El curso con id ${id} no existe`);
+    }
     return this.cursoService.remove(+id);
   }
 }
