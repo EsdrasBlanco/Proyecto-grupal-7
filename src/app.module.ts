@@ -8,6 +8,10 @@ import { AulaModule } from './aula/aula.module.js';
 import { MatriculaModule } from './matricula/matricula.module.js';
 import { CursoModule } from './curso/curso.module.js';
 import { UserModule } from './user/user.module.js';
+import { AuthModule } from './auth/auth.module.js';
+import { EstudianteModule } from './estudiante/estudiante.module.js';
+import { DocenteModule } from './docente/docente.module.js';
+import { MatriculaModule } from './matricula/matricula.module.js';
 
 @Module({
   imports: [
@@ -16,6 +20,10 @@ import { UserModule } from './user/user.module.js';
     MatriculaModule,
     CursoModule,
     UserModule,
+    Authmodule,
+    EstudianteModule,
+    DocenteModule,
+    MatriculaModule,
   ],
   controllers: [AppController],
   providers: [AppService],
