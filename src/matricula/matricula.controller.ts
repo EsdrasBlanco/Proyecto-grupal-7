@@ -36,12 +36,12 @@ export class MatriculaController {
   }
 
   @Post()
-  create(@Body() body: any) {
+  create(@Body() body: CreateMatriculaDto ) {
     return this.matriculaService.create(body);
   }
 
   @Put(':id')
-  update(@Param('id', ParseIntPipe) id: number, @Body() body: any) {
+  update(@Param('id', ParseIntPipe) id: number, @Body() body: UpdateMatriculaDto ) {
     return this.matriculaService.update(id, body);
   }
 
