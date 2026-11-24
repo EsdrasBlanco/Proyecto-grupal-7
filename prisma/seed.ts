@@ -1,27 +1,31 @@
-// prisma/seed.ts
-import bcrypt from "bcryptjs";
-import { prisma } from "../src/config/prisma";
+// prisma/seed.ts nuevo
+
+import 'dotenv/config';
+import { PrismaClient } from '../generated/prisma/client.js';
+import { PrismaPg } from '@prisma/adapter-pg';
+
+const adapter = new PrismaPg({
+  connectionString: process.env.DATABASE_URL,
+});
+const prisma = new PrismaClient({ adapter });
 
 // pnpm tsx prisma/seed.ts
 // Director: 1 registro (director@academia.edu / pas123).
 // Docentes: 9 registros (laura@academia.edu, roberto@academia.edu, etc. / pas123).
 // Aulas: 6 registros (Aula 101 hasta Lab Cómputo 3).
 // Cursos: 9 registros (6 asignados a cada aula + 3 adicionales).
-// Estudiantes y Matrículas: 90 estudiantes y 90 matrículas (15 por cada una de las 6 aulas).
+// Estudiantes y Matrículas: 108 estudiantes y 90 matrículas (18 por cada una de las 6 aulas).
 
 async function main() {
-  const defaultPassword = await bcrypt.hash("pas123", 10);
-
   // 1. Crear 1 usuario Director
   console.log("Creando 1 Director y 9 Docentes...");
   const director = await prisma.user.create({
     data: {
-      nombres: "Carlos",
-      apellidos: "Mendoza",
-      ecorreo: "director@academia.edu",
-      password: defaultPassword,
-      telefono: "987654321",
-      rol: "DIRECTOR",
+        nombres: "Carlos",     apellidos: "Mendoza", 
+        telefono: "987654321", rol: "DIRECTOR",
+        ecorreo: "director@academia.edu",
+        password: "pas123",
+
     },
   });
 
@@ -31,11 +35,9 @@ async function main() {
       especialidad: "Backend & Node.js",
       user: {
         create: {
-          nombres: "Laura",
-          apellidos: "Gómez",
+          nombres: "Laura",      apellidos: "Gómez",
           ecorreo: "laura@academia.edu",
-          password: defaultPassword,
-          rol: "DOCENTE",
+          password: "pas123",    rol: "DOCENTE",
         },
       },
     },
@@ -46,11 +48,9 @@ async function main() {
       especialidad: "Bases de Datos SQL",
       user: {
         create: {
-          nombres: "Roberto",
-          apellidos: "Silva",
+          nombres: "Roberto",     apellidos: "Silva",
           ecorreo: "roberto@academia.edu",
-          password: defaultPassword,
-          rol: "DOCENTE",
+          password: "pas123",     rol: "DOCENTE",
         },
       },
     },
@@ -61,11 +61,9 @@ async function main() {
       especialidad: "Diseño UX/UI",
       user: {
         create: {
-          nombres: "Elena",
-          apellidos: "Rojas",
+          nombres: "Elena",       apellidos: "Rojas",
           ecorreo: "elena@academia.edu",
-          password: defaultPassword,
-          rol: "DOCENTE",
+          password: "pas123",     rol: "DOCENTE",
         },
       },
     },
@@ -76,11 +74,9 @@ async function main() {
       especialidad: "Python e IA",
       user: {
         create: {
-          nombres: "Marcos",
-          apellidos: "Castro",
+          nombres: "Marcos",      apellidos: "Castro",
           ecorreo: "marcos@academia.edu",
-          password: defaultPassword,
-          rol: "DOCENTE",
+          password: "pas123",     rol: "DOCENTE",
         },
       },
     },
@@ -91,11 +87,9 @@ async function main() {
       especialidad: "Frontend & React",
       user: {
         create: {
-          nombres: "Patricia",
-          apellidos: "Morales",
+          nombres: "Patricia",    apellidos: "Morales",
           ecorreo: "patricia@academia.edu",
-          password: defaultPassword,
-          rol: "DOCENTE",
+          password: "pas123",     rol: "DOCENTE",
         },
       },
     },
@@ -106,11 +100,9 @@ async function main() {
       especialidad: "DevOps & Cloud",
       user: {
         create: {
-          nombres: "Fernando",
-          apellidos: "Ortiz",
+          nombres: "Fernando",   apellidos: "Ortiz",
           ecorreo: "fernando@academia.edu",
-          password: defaultPassword,
-          rol: "DOCENTE",
+          password: "pas123",    rol: "DOCENTE",
         },
       },
     },
@@ -121,11 +113,9 @@ async function main() {
       especialidad: "Ciberseguridad",
       user: {
         create: {
-          nombres: "Gabriela",
-          apellidos: "Navarro",
+          nombres: "Gabriela",    apellidos: "Navarro",
           ecorreo: "gabriela@academia.edu",
-          password: defaultPassword,
-          rol: "DOCENTE",
+          password: "pas123",     rol: "DOCENTE",
         },
       },
     },
@@ -136,11 +126,9 @@ async function main() {
       especialidad: "Desarrollo Móvil",
       user: {
         create: {
-          nombres: "Ricardo",
-          apellidos: "Paredes",
+          nombres: "Ricardo",    apellidos: "Paredes",
           ecorreo: "ricardo@academia.edu",
-          password: defaultPassword,
-          rol: "DOCENTE",
+          password: "pas123",    rol: "DOCENTE",
         },
       },
     },
@@ -154,7 +142,7 @@ async function main() {
           nombres: "Valeria",
           apellidos: "Campos",
           ecorreo: "valeria@academia.edu",
-          password: defaultPassword,
+          password: "pas123",
           rol: "DOCENTE",
         },
       },
@@ -247,7 +235,8 @@ async function main() {
     }),
   ]);
 
-  // 5. Crear 3 Cursos adicionales compartiendo aulas en otro horario (sin alumnos matriculados aún)
+    // 5. Crear 3 Cursos adicionales compartiendo aulas en otro horario 
+    // (sin alumnos matriculados aún)
   console.log("Agregando 3 Cursos adicionales sin alumnos...");
   await Promise.all([
     prisma.curso.create({
@@ -282,72 +271,100 @@ async function main() {
     }),
   ]);
 
-  // 6. Crear 15 Estudiantes por cada Aula (90 estudiantes en total) y sus Matrículas
-  console.log("Agregando 15 Estudiantes y matrículas por cada aula...");
-  const nombresBase = [
-    "Ana", "Luis", "Sofía", "Diego", "Camila",
-    "Mateo", "Lucía", "Sebastián", "Mariana", "Andrés",
-    "Valeria", "Javier", "Paula", "Gabriel", "Daniela",
-  ];
-  const apellidosBase = [
-    "Torres", "Pérez", "Ramírez", "Vargas", "Herrera",
-    "Díaz", "Mendoza", "Cruz", "Flores", "Ríos",
-    "Salazar", "Castillo", "Morales", "Ortega", "Reyes",
-  ];
+    // 6. Crear 18 Estudiantes únicos por cada Aula 
+    // (108 estudiantes de 400 combinaciones aleatorias)
+    console.log("Agregando 18 Estudiantes únicos y matrículas por cada aula...");
 
-  let contadorGlobal = 1;
+    const nombresBase = [
+        "Ana", "Luis", "Sofía", "Diego", "Camila",
+        "Mateo", "Lucía", "Sebastián", "Mariana", "Andrés",
+        "Valeria", "Javier", "Paula", "Gabriel", "Daniela",
+        "Alejandro", "Natalia", "Carlos", "Fernanda", "Ricardo",
+    ];
 
-  for (let i = 0; i < cursosPrincipales.length; i++) {
-    const cursoActual = cursosPrincipales[i];
+    const apellidosBase = [
+        "Torres", "Pérez", "Ramírez", "Vargas", "Herrera",
+        "Díaz", "Mendoza", "Cruz", "Flores", "Ríos",
+        "Salazar", "Castillo", "Morales", "Ortega", "Reyes",
+        "Guzmán", "Paredes", "Navarro", "Castro", "Rojas",
+    ];
 
-    for (let j = 0; j < 15; j++) {
-      const dni = String(71234000 + contadorGlobal);
-      const correo = `estudiante${contadorGlobal}@academia.edu`;
-
-      const estudiante = await prisma.estudiante.create({
-        data: {
-          documentoIdentidad: dni,
-          fechaNacimiento: new Date(`200${j % 4}-0${(j % 9) + 1}-15`),
-          user: {
-            create: {
-              nombres: nombresBase[j],
-              apellidos: `${apellidosBase[j]} (A${i + 1})`,
-              ecorreo: correo,
-              password: defaultPassword,
-              rol: "ESTUDIANTE",
-            },
-          },
-        },
-      });
-
-      let estadoMatricula: "APROBADO" | "INSCRITO" | "REPROBADO" = "INSCRITO";
-      let nota: number | undefined = undefined;
-
-      if (j % 3 === 0) {
-        estadoMatricula = "APROBADO";
-        nota = 16.5;
-      } else if (j % 5 === 0) {
-        estadoMatricula = "REPROBADO";
-        nota = 9.5;
-      }
-
-      await prisma.matricula.create({
-        data: {
-          estudianteId: estudiante.id,
-          cursoId: cursoActual.id,
-          calificacionFinal: nota,
-          estado: estadoMatricula,
-        },
-      });
-
-      contadorGlobal++;
+    // 6.1. Generar las 400 combinaciones posibles
+    const personasUnicas: { nombre: string; apellido: string }[] = [];
+    for (const nombre of nombresBase) {
+        for (const apellido of apellidosBase) {
+            personasUnicas.push({ nombre, apellido });
+        }
     }
-  }
+
+    // 6.2. Mezclar (Shuffle Fisher-Yates) para que las aulas tengan nombres variados
+    for (let i = personasUnicas.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [personasUnicas[i], personasUnicas[j]] = [personasUnicas[j], personasUnicas[i]];
+    }
+
+    // Función auxiliar para limpiar tildes y la "ñ" en los correos
+    const limpiarTexto = (texto: string) =>
+        texto
+            .toLowerCase()
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .replace(/ñ/g, "n");
+
+    const ALUMNOS_POR_AULA = 18;
+    let contadorGlobal = 1;
+
+    for (let i = 0; i < cursosPrincipales.length; i++) {
+        const cursoActual = cursosPrincipales[i];
+
+        for (let j = 0; j < ALUMNOS_POR_AULA; j++) {
+            const persona = personasUnicas[contadorGlobal - 1];
+            const dni = String(71234000 + contadorGlobal);
+            const correo = `${limpiarTexto(persona.nombre)}.${limpiarTexto(persona.apellido)}@academia.edu`;
+
+            const estudiante = await prisma.estudiante.create({
+                data: {
+                    documentoIdentidad: dni,
+                    fechaNacimiento: new Date(`200${j % 4}-0${(j % 9) + 1}-15`),
+                    user: {
+                        create: {
+                            nombres: persona.nombre,
+                            apellidos: persona.apellido,
+                            ecorreo: correo,
+                            password: "pas123",
+                            rol: "ESTUDIANTE",
+                        },
+                    },
+                },
+            });
+
+            let estadoMatricula: "APROBADO" | "INSCRITO" | "REPROBADO" = "INSCRITO";
+            let nota: number | undefined = undefined;
+
+            if (j % 3 === 0) {
+                estadoMatricula = "APROBADO";
+                nota = 16.5;
+            } else if (j % 5 === 0) {
+                estadoMatricula = "REPROBADO";
+                nota = 9.5;
+            }
+
+            await prisma.matricula.create({
+                data: {
+                    estudianteId: estudiante.id,
+                    cursoId: cursoActual.id,
+                    calificacionFinal: nota,
+                    estado: estadoMatricula,
+                },
+            });
+
+            contadorGlobal++;
+        }
+    }
 
   console.log("Base de datos poblada correctamente:", {
     directorId: director.id,
-    totalAulas: 6,
-    totalCursos: 9,
+    totalAulas: 6,     totalCursos: 9,
     totalEstudiantesCreados: contadorGlobal - 1,
   });
 }
