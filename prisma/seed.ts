@@ -1,6 +1,7 @@
 // prisma/seed.ts nuevo
 
 import 'dotenv/config';
+import { hash } from 'bcryptjs';
 import { PrismaClient } from '../generated/prisma/client.js';
 import { PrismaPg } from '@prisma/adapter-pg';
 
@@ -14,9 +15,10 @@ const prisma = new PrismaClient({ adapter });
 // Docentes: 9 registros (laura@academia.edu, roberto@academia.edu, etc. / pas123).
 // Aulas: 6 registros (Aula 101 hasta Lab Cómputo 3).
 // Cursos: 9 registros (6 asignados a cada aula + 3 adicionales).
-// Estudiantes y Matrículas: 108 estudiantes y 90 matrículas (18 por cada una de las 6 aulas).
+// Estudiantes y Matrículas: 108 estudiantes y 108 matrículas (18 por cada una de las 6 aulas).
 
 async function main() {
+  const passwordHash = await hash("pas123", 10);
   // 1. Crear 1 usuario Director
   console.log("Creando 1 Director y 9 Docentes...");
   const director = await prisma.user.create({
@@ -24,7 +26,7 @@ async function main() {
         nombres: "Carlos",     apellidos: "Mendoza", 
         telefono: "987654321", rol: "DIRECTOR",
         ecorreo: "director@academia.edu",
-        password: "pas123",
+        password: passwordHash,
 
     },
   });
@@ -37,7 +39,7 @@ async function main() {
         create: {
           nombres: "Laura",      apellidos: "Gómez",
           ecorreo: "laura@academia.edu",
-          password: "pas123",    rol: "DOCENTE",
+          password: passwordHash,    rol: "DOCENTE",
         },
       },
     },
@@ -50,7 +52,7 @@ async function main() {
         create: {
           nombres: "Roberto",     apellidos: "Silva",
           ecorreo: "roberto@academia.edu",
-          password: "pas123",     rol: "DOCENTE",
+          password: passwordHash,     rol: "DOCENTE",
         },
       },
     },
@@ -63,7 +65,7 @@ async function main() {
         create: {
           nombres: "Elena",       apellidos: "Rojas",
           ecorreo: "elena@academia.edu",
-          password: "pas123",     rol: "DOCENTE",
+          password: passwordHash,     rol: "DOCENTE",
         },
       },
     },
@@ -76,7 +78,7 @@ async function main() {
         create: {
           nombres: "Marcos",      apellidos: "Castro",
           ecorreo: "marcos@academia.edu",
-          password: "pas123",     rol: "DOCENTE",
+          password: passwordHash,     rol: "DOCENTE",
         },
       },
     },
@@ -89,7 +91,7 @@ async function main() {
         create: {
           nombres: "Patricia",    apellidos: "Morales",
           ecorreo: "patricia@academia.edu",
-          password: "pas123",     rol: "DOCENTE",
+          password: passwordHash,     rol: "DOCENTE",
         },
       },
     },
@@ -102,7 +104,7 @@ async function main() {
         create: {
           nombres: "Fernando",   apellidos: "Ortiz",
           ecorreo: "fernando@academia.edu",
-          password: "pas123",    rol: "DOCENTE",
+          password: passwordHash,    rol: "DOCENTE",
         },
       },
     },
@@ -115,7 +117,7 @@ async function main() {
         create: {
           nombres: "Gabriela",    apellidos: "Navarro",
           ecorreo: "gabriela@academia.edu",
-          password: "pas123",     rol: "DOCENTE",
+          password: passwordHash,     rol: "DOCENTE",
         },
       },
     },
@@ -128,7 +130,7 @@ async function main() {
         create: {
           nombres: "Ricardo",    apellidos: "Paredes",
           ecorreo: "ricardo@academia.edu",
-          password: "pas123",    rol: "DOCENTE",
+          password: passwordHash,    rol: "DOCENTE",
         },
       },
     },
@@ -142,7 +144,7 @@ async function main() {
           nombres: "Valeria",
           apellidos: "Campos",
           ecorreo: "valeria@academia.edu",
-          password: "pas123",
+          password: passwordHash,
           rol: "DOCENTE",
         },
       },
@@ -331,7 +333,7 @@ async function main() {
                             nombres: persona.nombre,
                             apellidos: persona.apellido,
                             ecorreo: correo,
-                            password: "pas123",
+                            password: passwordHash,
                             rol: "ESTUDIANTE",
                         },
                     },
