@@ -2,17 +2,24 @@ import {
   Controller,
   Get,
   Post,
-  Put,
-  Delete,
-  Param,
   Body,
-  NotFoundException,
+  Patch,
+  Put,
+  Param,
+  Delete,
 } from '@nestjs/common';
 import { AulaService } from './aula.service.js';
+import { CreateAulaDto } from './dto/create-aula.dto.js';
+import { UpdateAulaDto } from './dto/update-aula.dto.js';
 
 @Controller('aula')
 export class AulaController {
   constructor(private readonly aulaService: AulaService) {}
+
+  @Post()
+  create(@Body() createAulaDto: CreateAulaDto) {
+    return this.aulaService.create(createAulaDto);
+  }
 
   @Get()
   findAll() {
@@ -20,34 +27,22 @@ export class AulaController {
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: string) {
-    const aula = await this.aulaService.findOne(+id);
-    if (!aula) {
-      throw new NotFoundException(`El aula con id ${id} no existe`);
-    }
-    return aula;
+  findOne(@Param('id') id: string) {
+    return this.aulaService.findOne(+id);
   }
 
-  @Post()
-  create(@Body() body: any) {
-    return this.aulaService.create(body);
+  @Patch(':id')
+  update(@Param('id') id: string, @Body() updateAulaDto: UpdateAulaDto) {
+    return this.aulaService.update(+id, updateAulaDto);
   }
 
   @Put(':id')
-  async update(@Param('id') id: string, @Body() body: any) {
-    const aula = await this.aulaService.findOne(+id);
-    if (!aula) {
-      throw new NotFoundException(`El aula con id ${id} no existe`);
-    }
-    return this.aulaService.update(+id, body);
+  put(@Param('id') id: string, @Body() updateAulaDto: UpdateAulaDto) {
+    return this.aulaService.update(+id, updateAulaDto);
   }
 
   @Delete(':id')
-  async remove(@Param('id') id: string) {
-    const aula = await this.aulaService.findOne(+id);
-    if (!aula) {
-      throw new NotFoundException(`El aula con id ${id} no existe`);
-    }
+  remove(@Param('id') id: string) {
     return this.aulaService.remove(+id);
   }
 }
