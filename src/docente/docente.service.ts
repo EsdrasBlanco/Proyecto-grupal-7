@@ -36,14 +36,13 @@ export class DocenteService {
     }
   }
 
-  async create(dto: CreateDocenteDto) {
-    await this.validarUsuario(dto.userId);
+  async create(data: CreateDocenteDto) {
+    await this.validarUsuario(data.userId);
     return this.prisma.docente.create({
-      data: dto,
+      data,
       include: { user: { select: userSelect } },
     });
   }
-
   findAll() {
     return this.prisma.docente.findMany({
       orderBy: { id: 'asc' },
@@ -62,14 +61,14 @@ export class DocenteService {
     return docente;
   }
 
-  async update(id: number, dto: UpdateDocenteDto) {
+  async update(id: number, data: UpdateDocenteDto) {
     await this.findOne(id);
-    if (dto.userId !== undefined) {
-      await this.validarUsuario(dto.userId, id);
+    if (data.userId !== undefined) {
+      await this.validarUsuario(data.userId, id);
     }
     return this.prisma.docente.update({
       where: { id },
-      data: dto,
+      data,
       include: { user: { select: userSelect } },
     });
   }
