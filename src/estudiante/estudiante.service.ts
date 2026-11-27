@@ -3,6 +3,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import { hash } from 'bcryptjs';
 import { CreateEstudianteDto } from './dto/create-estudiante.dto.js';
 import { UpdateEstudianteDto } from './dto/update-estudiante.dto.js';
 import { PrismaService } from '../prisma/prisma.service.js';
@@ -54,10 +55,20 @@ export class EstudianteService {
   }
 
   async create(dto: CreateEstudianteDto) {
-    await this.validar(dto);
-    return this.prisma.estudiante.create({
-      data: dto,
-      include: { user: { select: userSelect } },
+    const { password, ...estudianteData } = dto;
+    await this.validar(estudianteData);
+    const passwordHash = await hash(password, 10);
+
+    return this.prisma.$transaction(async (tx) => {
+      await tx.user.update({
+        where: { id: estudianteData.userId },
+        data: { password: passwordHash },
+      });
+
+      return tx.estudiante.create({
+        data: estudianteData,
+        include: { user: { select: userSelect } },
+      });
     });
   }
 
@@ -80,17 +91,43 @@ export class EstudianteService {
   }
 
   async update(id: number, dto: UpdateEstudianteDto) {
-    await this.findOne(id);
-    await this.validar(dto, id);
-    return this.prisma.estudiante.update({
-      where: { id },
-      data: dto,
-      include: { user: { select: userSelect } },
+    const estudiante = await this.findOne(id);
+    const { password, ...estudianteData } = dto;
+    const targetUserId = estudianteData.userId ?? estudiante.userId;
+
+    await this.validar(estudianteData, id);
+    const passwordHash = password ? await hash(password, 10) : undefined;
+
+    return this.prisma.$transaction(async (tx) => {
+      if (passwordHash) {
+        await tx.user.update({
+          where: { id: targetUserId },
+          data: { password: passwordHash },
+        });
+      }
+
+      return tx.estudiante.update({
+        where: { id },
+        data: estudianteData,
+        include: { user: { select: userSelect } },
+      });
     });
   }
 
   async remove(id: number) {
-    await this.findOne(id);
-    return this.prisma.estudiante.delete({ where: { id } });
+    const estudiante = await this.findOne(id);
+    return this.prisma.user.update({
+      where: { id: estudiante.userId },
+      data: { activo: false },
+      select: userSelect,
+    });
+  }
+
+  async deleteGozu(id: number) {
+    const estudiante = await this.findOne(id);
+    return this.prisma.user.delete({
+      where: { id: estudiante.userId },
+      select: userSelect,
+    });
   }
 }

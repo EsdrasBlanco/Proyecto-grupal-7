@@ -7,12 +7,16 @@ import {
   Param,
   Delete,
   ParseIntPipe,
+  UseGuards,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
 import { EstudianteService } from './estudiante.service.js';
 import { CreateEstudianteDto } from './dto/create-estudiante.dto.js';
 import { UpdateEstudianteDto } from './dto/update-estudiante.dto.js';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard.js';
+import { RolesGuard } from '../auth/guards/roles.guard.js';
+import { Roles } from '../auth/decorators/roles.decorator.js';
 
 @Controller('estudiante')
 @UsePipes(
@@ -31,16 +35,22 @@ export class EstudianteController {
   }
 
   @Get()
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('ESTUDIANTE', 'DOCENTE', 'DIRECTOR')
   findAll() {
     return this.estudianteService.findAll();
   }
 
   @Get(':id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('DIRECTOR')
   findOne(@Param('id', ParseIntPipe) id: number) {
     return this.estudianteService.findOne(id);
   }
 
   @Patch(':id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('DIRECTOR')
   update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateEstudianteDto: UpdateEstudianteDto,
@@ -49,7 +59,16 @@ export class EstudianteController {
   }
 
   @Delete(':id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('DIRECTOR')
   remove(@Param('id', ParseIntPipe) id: number) {
     return this.estudianteService.remove(id);
+  }
+
+  @Delete('/hard/:id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('DIRECTOR')
+  hardRemove(@Param('id', ParseIntPipe) id: number) {
+    return this.estudianteService.deleteGozu(id);
   }
 }

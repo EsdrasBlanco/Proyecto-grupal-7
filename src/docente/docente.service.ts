@@ -3,6 +3,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import { hash } from 'bcryptjs';
 import { CreateDocenteDto } from './dto/create-docente.dto.js';
 import { UpdateDocenteDto } from './dto/update.docente.dto.js';
 import { PrismaService } from '../prisma/prisma.service.js';
@@ -37,12 +38,23 @@ export class DocenteService {
   }
 
   async create(data: CreateDocenteDto) {
-    await this.validarUsuario(data.userId);
-    return this.prisma.docente.create({
-      data,
-      include: { user: { select: userSelect } },
+    const { password, ...docenteData } = data;
+    await this.validarUsuario(docenteData.userId);
+    const passwordHash = await hash(password, 10);
+
+    return this.prisma.$transaction(async (tx) => {
+      await tx.user.update({
+        where: { id: docenteData.userId },
+        data: { password: passwordHash },
+      });
+
+      return tx.docente.create({
+        data: docenteData,
+        include: { user: { select: userSelect } },
+      });
     });
   }
+
   findAll() {
     return this.prisma.docente.findMany({
       orderBy: { id: 'asc' },
@@ -62,19 +74,46 @@ export class DocenteService {
   }
 
   async update(id: number, data: UpdateDocenteDto) {
-    await this.findOne(id);
-    if (data.userId !== undefined) {
-      await this.validarUsuario(data.userId, id);
+    const docente = await this.findOne(id);
+    const { password, ...docenteData } = data;
+    const targetUserId = docenteData.userId ?? docente.userId;
+
+    if (docenteData.userId !== undefined) {
+      await this.validarUsuario(docenteData.userId, id);
     }
-    return this.prisma.docente.update({
-      where: { id },
-      data,
-      include: { user: { select: userSelect } },
+
+    const passwordHash = password ? await hash(password, 10) : undefined;
+
+    return this.prisma.$transaction(async (tx) => {
+      if (passwordHash) {
+        await tx.user.update({
+          where: { id: targetUserId },
+          data: { password: passwordHash },
+        });
+      }
+
+      return tx.docente.update({
+        where: { id },
+        data: docenteData,
+        include: { user: { select: userSelect } },
+      });
     });
   }
 
   async remove(id: number) {
-    await this.findOne(id);
-    return this.prisma.docente.delete({ where: { id } });
+    const docente = await this.findOne(id);
+    return this.prisma.user.update({
+      where: { id: docente.userId },
+      data: { activo: false },
+      select: userSelect,
+    });
+  }
+
+  async deleteGozu(id: number) {
+    const docente = await this.findOne(id);
+    return this.prisma.user.delete({
+      where: { id: docente.userId },
+      select: userSelect,
+    });
   }
 }
