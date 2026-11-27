@@ -24,3 +24,5 @@ permissions:
   types:
     build: true
     skills: true
+  node-base64:
+    build: true
