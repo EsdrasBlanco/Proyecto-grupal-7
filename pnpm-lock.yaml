@@ -35,9 +35,6 @@ importers:
       '@prisma/client-runtime-utils':
         specifier: ^7.10.1
         version: 7.10.1
-      bcryptjs:
-        specifier: ^3.0.3
-        version: 3.0.3
       class-transformer:
         specifier: ^0.5.1
         version: 0.5.1
@@ -72,15 +69,30 @@ importers:
       '@nestjs/swagger':
         specifier: ^12.1.2
         version: 12.1.2(@nestjs/common@12.6.0(class-transformer@0.5.1)(class-validator@0.15.1)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@12.6.0)(class-transformer@0.5.1)(class-validator@0.15.1)(reflect-metadata@0.2.2)(typescript@5.9.3)
+      '@types/bcryptjs':
+        specifier: 2.4.6
+        version: 2.4.6
       '@types/express':
         specifier: ^5.0.0
         version: 5.0.6
+      '@types/jsonwebtoken':
+        specifier: ^9.0.10
+        version: 9.0.10
       '@types/node':
         specifier: ^24.0.0
         version: 24.19.2
       '@types/pg':
         specifier: ^8.23.1
         version: 8.23.1
+      bcryptjs:
+        specifier: ^3.0.3
+        version: 3.0.3
+      jsonwebtoken:
+        specifier: ^9.0.3
+        version: 9.0.3
+      jwt:
+        specifier: ^0.2.0
+        version: 0.2.0
       prettier:
         specifier: ^3.4.2
         version: 3.10.1
@@ -675,6 +687,9 @@ packages:
   '@tokenizer/token@0.3.0':
     resolution: {integrity: sha512-OvjF+z51L3ov0OyAU0duzsYuvO01PH7x4t6DJx+guahgTnBHkhJdG7soQeTSFLWN3efnHyibZ4Z8l2EuWwJN3A==}
 
+  '@types/bcryptjs@2.4.6':
+    resolution: {integrity: sha512-9xlo6R2qDs5uixm0bcIqCeMCE6HiQsIyel9KQySStiyqNl2tnj2mP3DX1Nf56MD6KMenNNlBBsy3LJ7gUEQPXQ==}
+
   '@types/body-parser@1.19.6':
     resolution: {integrity: sha512-HLFeCYgz89uk22N5Qg3dvGvsv46B8GLvKKo1zKG4NybA8U2DiEO3w9lqGg29t/tfLRJpJ6iQxnVw4OnB7MoM9g==}
 
@@ -1175,6 +1190,10 @@ packages:
   jws@4.0.1:
     resolution: {integrity: sha512-EKI/M/yqPncGUUh44xz0PxSidXFr/+r0pA70+gIYhjv+et7yxM+s29Y+VGDkovRofQem0fs7Uvf4+YmAdyRduA==}
 
+  jwt@0.2.0:
+    resolution: {integrity: sha512-+lsJgK3p+dr7yCHO19Ap2uFh+pMSCayPRGjWmf3kYCnYfO+1kqz4DqA8s65HKYIrw5c2NBo+dEvzoZUco09j4Q==}
+    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
+
   libphonenumber-js@1.13.17:
     resolution: {integrity: sha512-V92dxRHhYTsHF5B6IjR8rtKW6qL7xKuERPFFqZt7XQl8A+NikbwEzjhxGpM+R6JnWjaL7/wokWSdTG/eyYAscQ==}
 
@@ -1289,6 +1308,9 @@ packages:
   negotiator@1.1.0:
     resolution: {integrity: sha512-NMPBRMJgiQHjbd8phG3Vebdx4kZ1H121rbl5IkMqeOsahptB9BKo/d7oJ3zTXqTgagn2bWlNSXkh0QUGM31RYg==}
     engines: {node: '>=18'}
+
+  node-base64@0.0.1:
+    resolution: {integrity: sha512-lzWZQXvK7O1g5aKPCTYQJFGJc3MToEMlGmhXN+2UtkRYQz0OiWHoSMkfqQedUYCwWnixvsauH/IFsaFkrspjYQ==}
 
   node-emoji@2.2.0:
     resolution: {integrity: sha512-Z3lTE9pLaJF47NyMhd4ww1yFTAP8YhYI8SleJiHzM46Fgpm5cnNzSl9XfzFNqbaz+VlJrIj3fXQ4DeN1Rjm6cw==}
@@ -2269,6 +2291,8 @@ snapshots:
 
   '@tokenizer/token@0.3.0': {}
 
+  '@types/bcryptjs@2.4.6': {}
+
   '@types/body-parser@1.19.6':
     dependencies:
       '@types/connect': 3.4.38
@@ -2801,6 +2825,10 @@ snapshots:
       jwa: 2.0.1
       safe-buffer: 5.2.1
 
+  jwt@0.2.0:
+    dependencies:
+      node-base64: 0.0.1
+
   libphonenumber-js@1.13.17: {}
 
   lilconfig@2.1.0: {}
@@ -2894,6 +2922,8 @@ snapshots:
   negotiator@1.1.0:
     dependencies:
       content-type: 2.1.0
+
+  node-base64@0.0.1: {}
 
   node-emoji@2.2.0:
     dependencies:

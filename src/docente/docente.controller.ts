@@ -14,6 +14,7 @@ import { DocenteService } from './docente.service.js';
 import { CreateDocenteDto } from './dto/create-docente.dto.js';
 import { UpdateDocenteDto } from './dto/update.docente.dto.js';
 
+
 @Controller('docente')
 @UsePipes(
   new ValidationPipe({
