@@ -1,13 +1,22 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { Transform, Type } from 'class-transformer';
-import { IsInt, IsPositive, IsString, MaxLength, MinLength } from 'class-validator';
+import {
+  IsInt,
+  IsNotEmpty,
+  IsPositive,
+  IsString,
+  MaxLength,
+} from 'class-validator';
 
 export class CreateDocenteDto {
+  @ApiProperty({ example: 'Matemáticas' })
   @IsString()
   @Transform(({ value }) => value?.trim())
-  @MinLength(1)
+  @IsNotEmpty()
   @MaxLength(100)
   especialidad: string;
 
+  @ApiProperty({ example: 1 })
   @Type(() => Number)
   @IsInt()
   @IsPositive()
